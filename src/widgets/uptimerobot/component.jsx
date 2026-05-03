@@ -2,6 +2,7 @@ import Block from "components/services/widget/block";
 import Container from "components/services/widget/container";
 import { useTranslation } from "next-i18next";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 import { formatProxyUrl } from "utils/proxy/api-helpers";
 
@@ -11,9 +12,11 @@ export default function Component({ service }) {
 
   const [uptimerobotData, setUptimerobotData] = useState(null);
 
+  const { basePath } = useRouter();
+
   useEffect(() => {
     async function fetchData() {
-      const url = formatProxyUrl(widget, "getmonitors");
+      const url = formatProxyUrl(widget, "getmonitors", undefined, basePath);
       const res = await fetch(url, { method: "POST" });
       setUptimerobotData(await res.json());
     }

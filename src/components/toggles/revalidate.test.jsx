@@ -10,6 +10,7 @@ describe("components/toggles/revalidate", () => {
     const reload = vi.fn();
     const fetchSpy = vi.spyOn(globalThis, "fetch").mockResolvedValueOnce({ ok: true });
     vi.stubGlobal("location", { reload });
+    vi.mock("next/router", () => ({ useRouter: () => { return { basePath: "" } } }));
 
     render(<Revalidate />);
     const icon = document.querySelector("svg");

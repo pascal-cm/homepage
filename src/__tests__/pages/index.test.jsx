@@ -179,6 +179,7 @@ describe("pages/index getStaticProps", () => {
     state.widgetCalls = [];
     state.windowFocused = false;
     router.asPath = "/";
+    router.basePath = "";
     i18n.changeLanguage.mockClear();
   });
 

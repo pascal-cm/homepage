@@ -12,7 +12,9 @@ ARG CI
 ARG BUILDTIME
 ARG VERSION
 ARG REVISION
+ARG HOMEPAGE_BASE_PATH
 ENV CI=$CI
+ENV HOMEPAGE_BASE_PATH=${HOMEPAGE_BASE_PATH}
 
 # Install and build only outside CI
 RUN if [ "$CI" != "true" ]; then \
@@ -38,6 +40,8 @@ LABEL org.opencontainers.image.documentation='https://github.com/gethomepage/hom
 LABEL org.opencontainers.image.source='https://github.com/gethomepage/homepage'
 LABEL org.opencontainers.image.licenses='Apache-2.0'
 
+ARG HOMEPAGE_BASE_PATH
+
 # Setup
 WORKDIR /app
 
@@ -56,6 +60,7 @@ USER root
 ENV NODE_ENV=production
 ENV HOSTNAME=::
 ENV PORT=3000
+ENV HOMEPAGE_BASE_PATH=${HOMEPAGE_BASE_PATH}
 EXPOSE $PORT
 
 HEALTHCHECK --interval=10s --timeout=3s --start-period=20s \

@@ -8,6 +8,8 @@ import { expectBlockValue } from "test-utils/widget-assertions";
 
 import Component from "./component";
 
+vi.mock("next/router", () => ({ useRouter: () => { return { basePath: "" } } }));
+
 describe("widgets/stash/component", () => {
   const originalFetch = globalThis.fetch;
 

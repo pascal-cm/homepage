@@ -4,6 +4,7 @@ import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { FiSearch } from "react-icons/fi";
 import useSWR from "swr";
 import { SettingsContext } from "utils/contexts/settings";
+import { useRouter } from "next/router";
 
 import ResolvedIcon from "./resolvedicon";
 import { getStoredProvider, searchProviders } from "./widgets/search/search";
@@ -30,6 +31,8 @@ export default function QuickLaunch({ servicesAndBookmarks, searchString, setSea
 
   const { data: widgets } = useSWR("/api/widgets");
   const searchWidget = Object.values(widgets).find((w) => w.type === "search");
+
+  const { basePath } = useRouter();
 
   let searchProvider;
 
@@ -166,7 +169,7 @@ export default function QuickLaunch({ servicesAndBookmarks, searchString, setSea
         if (searchProvider.showSearchSuggestions && searchProvider.suggestionUrl) {
           if (searchString.trim() !== searchSuggestions[0]?.trim()) {
             fetch(
-              `/api/search/searchSuggestion?query=${encodeURIComponent(searchString)}&providerName=${
+              `${basePath}/api/search/searchSuggestion?query=${encodeURIComponent(searchString)}&providerName=${
                 searchProvider.name ?? "Custom"
               }`,
               { signal: abortController.signal },

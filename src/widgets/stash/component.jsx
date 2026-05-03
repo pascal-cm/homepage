@@ -2,6 +2,7 @@ import Block from "components/services/widget/block";
 import Container from "components/services/widget/container";
 import { useTranslation } from "next-i18next";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 import { formatProxyUrl } from "utils/proxy/api-helpers";
 
@@ -11,9 +12,11 @@ export default function Component({ service }) {
   const { widget } = service;
   const [stats, setStats] = useState(null);
 
+  const { basePath } = useRouter();
+
   useEffect(() => {
     async function fetchStats() {
-      const url = formatProxyUrl(widget, "stats");
+      const url = formatProxyUrl(widget, "stats", undefined, basePath);
       const res = await fetch(url, { method: "POST" });
       setStats(await res.json());
     }

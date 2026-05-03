@@ -15,6 +15,7 @@ import { Fragment, useEffect, useState } from "react";
 import { BiLogoBing } from "react-icons/bi";
 import { FiSearch } from "react-icons/fi";
 import { SiBaidu, SiBrave, SiDuckduckgo, SiGoogle } from "react-icons/si";
+import { useRouter } from "next/router";
 
 import ContainerForm from "../widget/container_form";
 import Raw from "../widget/raw";
@@ -88,6 +89,8 @@ export default function Search({ options }) {
   const [selectedProvider, setSelectedProvider] = useState(searchProviders[availableProviderIds[0] ?? "google"]);
   const [searchSuggestions, setSearchSuggestions] = useState([]);
 
+  const { basePath } = useRouter();
+
   useEffect(() => {
     const storedProvider = getStoredProvider();
     let storedProviderKey = null;
@@ -106,7 +109,7 @@ export default function Search({ options }) {
       query.trim().length > 0 &&
       query.trim() !== searchSuggestions[0]
     ) {
-      fetch(`/api/search/searchSuggestion?query=${encodeURIComponent(query)}&providerName=${selectedProvider.name}`, {
+      fetch(`${basePath}/api/search/searchSuggestion?query=${encodeURIComponent(query)}&providerName=${selectedProvider.name}`, {
         signal: abortController.signal,
       })
         .then(async (searchSuggestionResult) => {

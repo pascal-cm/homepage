@@ -11,6 +11,7 @@ import { TabProvider } from "utils/contexts/tab";
 import { ThemeProvider } from "utils/contexts/theme";
 
 import nextI18nextConfig from "../../next-i18next.config";
+import { useRouter } from "next/router"
 
 // eslint-disable-next-line no-unused-vars
 const tailwindSafelist = [
@@ -71,10 +72,16 @@ const tailwindSafelist = [
 ];
 
 function MyApp({ Component, pageProps }) {
+
+  const { basePath } = useRouter();
+
   return (
     <SWRConfig
       value={{
-        fetcher: (resource, init) => fetch(resource, init).then((res) => res.json()),
+        fetcher: (resource, init) => {
+          const url = basePath + resource;
+          return fetch(url, init).then((res) => res.json())
+        },
       }}
     >
       <Head>

@@ -40,12 +40,12 @@ export function getURLSearchParams(widget, endpoint) {
   return params;
 }
 
-export function formatProxyUrl(widget, endpoint, queryParams) {
+export function formatProxyUrl(widget, endpoint, queryParams, basePath) {
   const params = getURLSearchParams(widget, endpoint);
   if (queryParams) {
     params.append("query", JSON.stringify(queryParams));
   }
-  return `/api/services/proxy?${params.toString()}`;
+  return `${basePath ?? ""}/api/services/proxy?${params.toString()}`;
 }
 
 export function asJson(data) {

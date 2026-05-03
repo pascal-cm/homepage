@@ -1,0 +1,20 @@
+services:
+  app:
+    image: ghcr.io/gethomepage/homepage:latest
+    environment:
+      # HOMEPAGE_ALLOWED_HOSTS: defaults to localhost:3000, may need port.
+      # See gethomepage.dev/installation/#homepage_allowed_hosts
+      HOMEPAGE_ALLOWED_HOSTS: ${HOMEPAGE_ALLOWED_HOSTS:-localhost:3000}
+      # PUID: your user id
+      PUID: ${PUID:-1000}
+      # PGID: your group id
+      PGID: ${PGID:-1000}
+    ports:
+      # HOMEPAGE_HOST, HOMEPAGE_PORT: optional host address and port to bind to on docker host
+      - ${HOMEPAGE_HOST:+${HOMEPAGE_HOST-0.0.0.0}:}${HOMEPAGE_PORT:-3000}:3000
+    volumes:
+      # HOMEPAGE_CONFIG_DIR: a config directory is created and populated with defaults if it does not exist
+      - ${HOMEPAGE_CONFIG_DIR:-./config}:/app/config
+      # HOMEPAGE_DOCKER_SOCK: for docker integrations, defaults to /var/run/docker.sock
+      - ${HOMEPAGE_DOCKER_SOCK:-/var/run/docker.sock}:${HOMEPAGE_DOCKER_SOCK:-/var/run/docker.sock}:ro
+    restart: unless-stopped

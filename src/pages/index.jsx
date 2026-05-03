@@ -120,7 +120,7 @@ function Index({ initialSettings, fallback }) {
           setStale(true);
           localStorage.setItem("hash", hashData.hash);
 
-          fetch("/api/revalidate").then((res) => {
+          fetch(`${basePath}/api/revalidate`).then((res) => {
             if (res.ok) {
               window.location.reload();
             }
@@ -180,8 +180,16 @@ function Index({ initialSettings, fallback }) {
     );
   }
 
+  const { basePath } = useRouter();
+
   return (
-    <SWRConfig value={{ fallback, fetcher: (resource, init) => fetch(resource, init).then((res) => res.json()) }}>
+    <SWRConfig
+      value={{
+        fallback, fetcher: (resource, init) => {
+          const url = basePath + resource;
+          return fetch(url, init).then((res) => res.json())
+        }
+      }}>
       <ErrorBoundary>
         <Home initialSettings={initialSettings} />
       </ErrorBoundary>
@@ -402,6 +410,10 @@ function Home({ initialSettings }) {
     initialSettings.layout,
   ]);
 
+  const { basePath } = useRouter();
+  // If set, use `settings.base` path as is, or `BASE_PATH` with a trailing slash otherwise.
+  const baseHref = settings.base || basePath + "/";
+
   return (
     <>
       <Head>
@@ -414,7 +426,7 @@ function Home({ initialSettings }) {
           }
         />
         {settings.disableIndexing && <meta name="robots" content="noindex, nofollow" />}
-        {settings.base && <base href={settings.base} />}
+        <base href={baseHref} />
         {settings.favicon ? (
           <>
             <link rel="icon" href={settings.favicon} />
@@ -422,11 +434,11 @@ function Home({ initialSettings }) {
           </>
         ) : (
           <>
-            <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=4" />
-            <link rel="shortcut icon" href="/homepage.ico" />
-            <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=4" />
-            <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=4" />
-            <link rel="mask-icon" href="/safari-pinned-tab.svg?v=4" color="#1e9cd7" />
+              <link rel="apple-touch-icon" sizes="180x180" href={`${basePath}/apple-touch-icon.png?v=4`} />
+              <link rel="shortcut icon" href={`${basePath}/homepage.ico`} />
+              <link rel="icon" type="image/png" sizes="32x32" href={`${basePath}/favicon-32x32.png?v=4`} />
+              <link rel="icon" type="image/png" sizes="16x16" href={`${basePath}/favicon-16x16.png?v=4`} />
+              <link rel="mask-icon" href={`${basePath}/safari-pinned-tab.svg?v=4`} color="#1e9cd7" />
           </>
         )}
         <meta name="msapplication-TileColor" content={themes[settings.color || "slate"][settings.theme || "dark"]} />
@@ -434,7 +446,7 @@ function Home({ initialSettings }) {
         <meta name="color-scheme" content="dark light"></meta>
       </Head>
 
-      <Script src="/api/config/custom.js" />
+      <Script src={`${basePath}/api/config/custom.js`} />
 
       <div
         className={classNames(

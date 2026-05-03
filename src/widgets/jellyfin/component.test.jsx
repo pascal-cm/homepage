@@ -7,6 +7,7 @@ import { renderWithProviders } from "test-utils/render-with-providers";
 
 const { useWidgetAPI } = vi.hoisted(() => ({ useWidgetAPI: vi.fn() }));
 vi.mock("utils/proxy/use-widget-api", () => ({ default: useWidgetAPI }));
+vi.mock("next/router", () => ({ useRouter: () => { return { basePath: "" } } }));
 
 import Component from "./component";
 

@@ -1,6 +1,7 @@
 import Block from "components/services/widget/block";
 import Container from "components/services/widget/container";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 import { formatProxyUrl } from "utils/proxy/api-helpers";
 import useWidgetAPI from "utils/proxy/use-widget-api";
@@ -12,9 +13,11 @@ export default function Component({ service }) {
 
   const [pendingData, setPendingData] = useState(null);
 
+  const { basePath } = useRouter();
+
   useEffect(() => {
     async function fetchPending() {
-      const url = formatProxyUrl(widget, "pending");
+      const url = formatProxyUrl(widget, "pending", undefined, basePath);
       const res = await fetch(url, { method: "POST" });
       setPendingData(await res.json());
     }

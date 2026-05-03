@@ -48,6 +48,8 @@ vi.mock("@headlessui/react", async () => {
   };
 });
 
+vi.mock("next/router", () => ({ useRouter: () => { return { basePath: "" } } }));
+
 import Search from "./search";
 
 describe("components/widgets/search", () => {

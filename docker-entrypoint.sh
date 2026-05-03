@@ -69,6 +69,8 @@ if [ -d /app/.next ]; then
   fi
 fi
 
+echo "Serving homepage under ${HOMEPAGE_BASE_PATH:-/}"
+
 # Drop privileges (when asked to) if root, otherwise run as current user
 if [ "$(id -u)" = "0" ] && [ "${PUID}" != "0" ]; then
   exec su-exec ${PUID}:${PGID} "$@"

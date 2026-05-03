@@ -3,6 +3,7 @@ import Container from "components/services/widget/container";
 import { useTranslation } from "next-i18next";
 import { BsCpu, BsFillCpuFill, BsFillPlayFill, BsPauseFill, BsVolumeMuteFill } from "react-icons/bs";
 import { MdOutlineSmartDisplay } from "react-icons/md";
+import { useRouter } from "next/router";
 
 import { getURLSearchParams } from "utils/proxy/api-helpers";
 import useWidgetAPI from "utils/proxy/use-widget-api";
@@ -216,6 +217,8 @@ export default function Component({ service }) {
     refreshInterval: 60000,
   });
 
+  const { basePath } = useRouter();
+
   async function handlePlayCommand(session, command) {
     const params = getURLSearchParams(widget, command);
     params.append(
@@ -224,7 +227,7 @@ export default function Component({ service }) {
         sessionId: session.Id,
       }),
     );
-    const url = `/api/services/proxy?${params.toString()}`;
+    const url = `${basePath}/api/services/proxy?${params.toString()}`;
     await fetch(url, {
       method: "POST",
     }).then(() => {

@@ -1,8 +1,11 @@
 import { MdRefresh } from "react-icons/md";
+import { useRouter } from "next/router";
 
 export default function Revalidate() {
+  const { basePath } = useRouter();
+
   const revalidate = () => {
-    fetch("/api/revalidate").then((res) => {
+    fetch(`${basePath}/api/revalidate`).then((res) => {
       if (res.ok) {
         window.location.reload();
       }

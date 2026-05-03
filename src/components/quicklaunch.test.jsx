@@ -39,6 +39,11 @@ vi.mock("./widgets/search/search", () => ({
   },
 }));
 
+vi.mock("next/router", () => ({
+  useRouter: () => { return { basePath: "" } }
+}));
+
+
 import QuickLaunch from "./quicklaunch";
 
 function Wrapper({ servicesAndBookmarks = [], initialOpen = true } = {}) {

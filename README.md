@@ -67,38 +67,78 @@ Please note that when using features such as widgets, Homepage can access person
 
 ## With Docker
 
-Using docker compose:
+Homepage comes with a [compose.yaml](./compose.yaml) file. Using docker compose, run from within the cloned repository directory:
 
-```yaml
-services:
-  homepage:
-    image: ghcr.io/gethomepage/homepage:latest
-    container_name: homepage
-    environment:
-      HOMEPAGE_ALLOWED_HOSTS: gethomepage.dev # required, may need port. See gethomepage.dev/installation/#homepage_allowed_hosts
-      PUID: 1000 # optional, your user id
-      PGID: 1000 # optional, your group id
-    ports:
-      - 3000:3000
-    volumes:
-      - /path/to/config:/app/config # Make sure your local config directory exists
-      - /var/run/docker.sock:/var/run/docker.sock:ro # optional, for docker integrations
-    restart: unless-stopped
+```bash
+docker compose up --detach
 ```
 
-or docker run:
+Any custom configuration is best defined in a .env file:
+
+```bash
+HOMEPAGE_ALLOWED_HOSTS=localhost:3000
+```
+
+Alternatively, configuration can be passed as environment variables:
+
+```bash
+HOMEPAGE_ALLOWED_HOSTS=localhost:3000 \
+docker compose up --detach
+```
+
+See compose.yaml for all available environment variables.
+
+Or with docker run:
 
 ```bash
 docker run --name homepage \
-  -e HOMEPAGE_ALLOWED_HOSTS=gethomepage.dev \
+  -e HOMEPAGE_ALLOWED_HOSTS=localhost:3000 \
   -e PUID=1000 \
   -e PGID=1000 \
   -p 3000:3000 \
-  -v /path/to/config:/app/config \
+  -v ./config:/app/config \
   -v /var/run/docker.sock:/var/run/docker.sock:ro \
   --restart unless-stopped \
   ghcr.io/gethomepage/homepage:latest
 ```
+
+### Custom base path
+
+By default, homepage is served under `/`. To serve homepage under a different base path, a customized image must be built. The recommended way is to add a compose.override.yaml file alongside compose.yaml:
+
+```yaml
+services:
+  app:
+    image: !reset null
+    build:
+      args:
+        HOMEPAGE_BASE_PATH: ${HOMEPAGE_BASE_PATH}
+```
+
+Add the base path to your .env:
+
+```bash
+HOMEPAGE_ALLOWED_HOSTS=localhost:3000
+HOMEPAGE_BASE_PATH=/homepage
+```
+
+Build and start the container:
+
+```bash
+docker compose up --build --detach
+```
+
+For docker run:
+
+```bash
+HOMEPAGE_BASE_PATH=/homepage docker build --tag homepage:custom-base-path .
+HOMEPAGE_BASE_PATH=/homepage docker run --name homepage \
+  -e HOMEPAGE_BASE_PATH \
+  ... \ # remaining settings as above
+  homepage:custom-base-path
+```
+
+Custom base paths are also available in development mode, using `HOMEPAGE_BASE_PATH=/homepage pnpm run dev`.
 
 ## From Source
 

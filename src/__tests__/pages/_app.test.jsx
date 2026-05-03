@@ -20,6 +20,9 @@ vi.mock("utils/contexts/settings", () => ({
 vi.mock("utils/contexts/tab", () => ({
   TabProvider: ({ children }) => <>{children}</>,
 }));
+vi.mock("next/router", () => ({
+  useRouter: () => { return { basePath: "" } }
+}));
 
 import App from "pages/_app.jsx";
 

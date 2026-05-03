@@ -10,17 +10,19 @@ export async function getServerSideProps({ res }) {
 
   const pwa = settings.pwa || {};
 
+  const basePath = process.env.HOMEPAGE_BASE_PATH ?? "";
+
   const manifest = {
     name: settings.title || "Homepage",
     short_name: settings.title || "Homepage",
     icons: pwa.icons || [
       {
-        src: "/android-chrome-192x192.png?v=2",
+        src: "android-chrome-192x192.png?v=2",
         sizes: "192x192",
         type: "image/png",
       },
       {
-        src: "/android-chrome-512x512.png?v=2",
+        src: "android-chrome-512x512.png?v=2",
         sizes: "512x512",
         type: "image/png",
       },
@@ -29,7 +31,7 @@ export async function getServerSideProps({ res }) {
     theme_color: themes[color][theme],
     background_color: themes[color][theme],
     display: "standalone",
-    start_url: settings.startUrl || "/",
+    start_url: settings.startUrl || basePath + "/",
   };
 
   res.setHeader("Content-Type", "application/manifest+json");
