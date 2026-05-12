@@ -64,7 +64,7 @@ ENV HOMEPAGE_BASE_PATH=${HOMEPAGE_BASE_PATH}
 EXPOSE $PORT
 
 HEALTHCHECK --interval=10s --timeout=3s --start-period=20s \
-  CMD wget --no-verbose --tries=1 --spider http://127.0.0.1:$PORT/api/healthcheck || exit 1
+  CMD wget --no-verbose --tries=1 --spider http://127.0.0.1:${PORT}${HOMEPAGE_BASE_PATH}/api/healthcheck || exit 1
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["node", "server.js"]
